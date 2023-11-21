@@ -1,0 +1,41 @@
+{
+  "name": "Get PMID Details",
+
+  "namespace": "Vanderbilt\\GetPMIDDetailsExternalModule",
+  "framework-version": 12,
+  "authors": [
+    {
+      "name": "Eva Bascompte Moragas",
+      "email": "datacore@vumc.org",
+      "institution": "Vanderbilt University Medical Center"
+    }
+  ],
+
+  "no-auth-pages":[],
+
+  "description": "Pulls journal article details (e.g., title, publication date, author list, citation, PMCID) based on a user-entered PubMed reference number (PMID).",
+
+  "project-settings": [
+    {
+      "key": "instrument-name",
+      "name": "Instrument Name",
+      "required": true,
+      "type": "text"
+    },
+    {
+      "key": "api-key",
+      "name": "API Key",
+      "required": false,
+      "type": "text"
+    }
+  ],
+
+  "crons": [],
+
+  "compatibility": {
+    "php-version-min": "8.0.0",
+    "php-version-max": "",
+    "redcap-version-min": "13.4.13",
+    "redcap-version-max": ""
+  }
+}
