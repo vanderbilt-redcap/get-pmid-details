@@ -11,6 +11,7 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
     function redcap_every_page_before_render($project_id){
         $instrument = $this->getProjectSetting('instrument-name');
         if($_REQUEST['page'] == $instrument) {
+            echo '<script>console.log("IN")</script>';
             $record = (int)$_REQUEST['id'];
             self:$this->getPMIDLink($project_id,$record);
         }
