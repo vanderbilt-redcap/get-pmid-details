@@ -60,7 +60,8 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
                                     var btn = \'<div class="alert alert-danger" name="output_pmid_message" style="margin-top:10px">\' +
                                              jsonAjax.message+
                                             \'</div>\';
-                                    el.insertAdjacentHTML(\'afterend\', btn)
+                                    if(el != null)
+                                        el.insertAdjacentHTML(\'afterend\', btn)
                                 }
                             }
                         });
