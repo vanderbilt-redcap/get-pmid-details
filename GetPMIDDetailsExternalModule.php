@@ -12,7 +12,6 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
         $instrument = $this->getProjectSetting('instrument-name');
         if($_REQUEST['page'] == $instrument) {
             $record = (int)$_REQUEST['id'];
-            echo '<script>console.log('.$record.')</script>';
             self:$this->getPMIDLink($project_id,$record);
         }
     }
