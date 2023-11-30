@@ -56,7 +56,7 @@ if(empty($pmid_data["error"])) {
         echo json_encode(array("message"=>"success"));
     }else {
 //        echo json_encode(array("message" => "Something went wrong when saving the data"));
-        echo json_encode(array("message" =>$results));
+        echo json_encode(array("message" =>json_encode($results,JSON_PRETTY_PRINT)));
     }
 }else{
     echo json_encode(array("message" => "There are 0 results for PIMD #".$pmid));
