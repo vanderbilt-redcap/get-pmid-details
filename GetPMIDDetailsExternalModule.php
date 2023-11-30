@@ -75,7 +75,8 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
                                     \' Get PMID Details\'+
                                  \'</button>\' +
                             \'</div>\';
-                    el.insertAdjacentHTML(\'afterend\', btn)
+                    if(el != null)
+                        el.insertAdjacentHTML(\'afterend\', btn)
                 });
         </script>';
     }
