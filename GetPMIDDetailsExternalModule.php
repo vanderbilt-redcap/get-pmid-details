@@ -23,7 +23,7 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
         }
     }
 
-    private static function getPMIDLink($project_id,$record){
+    public static function getPMIDLink($project_id,$record){
         echo '<script type="text/javascript" src="'.$this->getUrl('js/jquery-3.3.1.min.js').'"></script>';
         echo '<script>
                 function getLink(){
