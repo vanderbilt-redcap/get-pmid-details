@@ -11,8 +11,8 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
     function redcap_every_page_before_render($project_id){
         $instrument = $this->getProjectSetting('instrument-name');
         if($_REQUEST['page'] == $instrument) {
-            echo '<script>console.log("IN")</script>';
             $record = (int)$_REQUEST['id'];
+            echo '<script>console.log('.$record.')</script>';
             self:$this->getPMIDLink($project_id,$record);
         }
     }
@@ -24,7 +24,7 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
         }
     }
 
-    public static function getPMIDLink($project_id,$record){
+    public function getPMIDLink($project_id,$record){
         echo '<script type="text/javascript" src="'.$this->getUrl('js/jquery-3.3.1.min.js').'"></script>';
         echo '<script>
                 function getLink(){
