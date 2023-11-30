@@ -17,7 +17,10 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
     }
 
     function redcap_survey_page($project_id,$record){
-        self:$this->getPMIDLink($project_id,$record);
+        $instrument = $this->getProjectSetting('instrument-name');
+        if($_REQUEST['page'] == $instrument) {
+            self:$this->getPMIDLink($project_id, $record);
+        }
     }
 
     function getPMIDLink($project_id,$record){
