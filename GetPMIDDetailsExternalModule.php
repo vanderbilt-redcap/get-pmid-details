@@ -10,27 +10,29 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
 
     function redcap_every_page_before_render($project_id){
         $instrument = $this->getProjectSetting('instrument-name');
-        if($_REQUEST['page'] == $instrument) {
+        if($_REQUEST['page'] == $instrument && !empty($instrument)) {
             $record = (int)$_REQUEST['id'];
-            self:$this->getPMIDLink($project_id,$record);
+            $repeat_instance = (int)$_REQUEST['instance'];
+            self:$this->getPMIDLink($project_id,$record,$repeat_instance);
         }
     }
 
-    function redcap_survey_page($project_id,$record){
+    function redcap_survey_page($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance){
         $instrument = $this->getProjectSetting('instrument-name');
-        if($_REQUEST['page'] == $instrument) {
-            self:$this->getPMIDLink($project_id, $record);
+        if($_REQUEST['page'] == $instrument && !empty($instrument)) {
+            self:$this->getPMIDLink($project_id, $record,$repeat_instance);
         }
     }
 
-    public function getPMIDLink($project_id,$record){
+    public function getPMIDLink($project_id,$record,$repeat_instance){
         echo '<script type="text/javascript" src="'.$this->getUrl('js/jquery-3.3.1.min.js').'"></script>';
         echo '<script>
-                function getLink(){
+                 function getLink(){
                     var value = document.getElementsByName("output_pmid")[0].value;
                     var url = '.json_encode($this->getUrl('getPMIDUrl.php')).';
                     var pid = '.json_encode($project_id).';
                     var record = '.json_encode($record).';
+                    var instance = '.json_encode($repeat_instance).';
                     var redcap_csrf_token = '.json_encode($this->getCSRFToken()).';
                     if(value == ""){
                         alert("You need a PMID value to retrieve the data.")
@@ -39,7 +41,7 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
                         $.ajax({
                             type: "GET",
                             url: url,
-                            data: "&pid="+pid+"&record="+record+"&value="+value+"&redcap_csrf_token="+redcap_csrf_token,
+                            data: "&pid="+pid+"&record="+record+"&instance="+instance+"&value="+value+"&redcap_csrf_token="+redcap_csrf_token,
                             error: function (xhr, status, error) {
                                 alert(xhr.responseText);
                             },
