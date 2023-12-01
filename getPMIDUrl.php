@@ -42,10 +42,16 @@ if(empty($pmid_data["error"])) {
     }
     $authors = rtrim($authors, ", ");
 
+    $year = $pmid_data['result'][$pmid]['pubdate'];
+    if ($year == trim($year) && strpos($year, ' ') !== false) {
+        #Date has spaces but not in beginning or end
+        $year = explode(" ",$pmid_data['result'][$pmid]['pubdate'])[0];
+    }
+
     #DATA
     $array['output_type'] = 1;
     $array['output_title'] = $pmid_data['result'][$pmid]['title'];
-    $array['output_year'] = $pmid_data['result'][$pmid]['pubdate'];
+    $array['output_year'] = $year;
     $array['output_authors'] = $authors;
     $array['output_venue'] = $pmid_data['result'][$pmid]['source'];
     $array['output_citation'] = $pmid_data['result'][$pmid]['source'] . ", " . $pmid_data['result'][$pmid]['epubdate'];
