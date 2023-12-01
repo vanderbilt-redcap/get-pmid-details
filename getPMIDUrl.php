@@ -77,7 +77,6 @@ if(empty($pmid_data["error"])) {
     }
 
     $results = \Records::saveData($pid, 'array', $array_data,'overwrite', 'YMD', 'flat', '', true, true, true, false, true, array(), true, false);
-    error_log(json_encode($results,JSON_PRETTY_PRINT));
 
     if(empty($results['errors'])){
         echo json_encode(array("message"=>"success"));
