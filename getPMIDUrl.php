@@ -48,10 +48,13 @@ if(empty($pmid_data["error"])) {
         $year = explode(" ",$pmid_data['result'][$pmid]['pubdate'])[0];
     }
 
+    if (is_numeric($year)) {
+        $array['output_year'] = $year;
+    }
+
     #DATA
     $array['output_type'] = 1;
     $array['output_title'] = $pmid_data['result'][$pmid]['title'];
-    $array['output_year'] = $year;
     $array['output_authors'] = $authors;
     $array['output_venue'] = $pmid_data['result'][$pmid]['source'];
     $array['output_citation'] = $pmid_data['result'][$pmid]['source'] . ", " . $pmid_data['result'][$pmid]['epubdate'];
