@@ -4,6 +4,10 @@ namespace Vanderbilt\GetPMIDDetailsExternalModule;
 $record = (int)$_REQUEST['record'];
 $pmid = (int)$_REQUEST['value'];
 $pid = (int)$_REQUEST['pid'];
+$instance = (int)$_REQUEST['instance'];
+
+$Proj = new \Project($pid);
+$event_id = $Proj->firstEventId;
 
 $api_key = $module->getProjectSetting('api-key');
 $instrument = $module->getProjectSetting('instrument-name');
@@ -37,20 +41,45 @@ if(empty($pmid_data["error"])) {
         }
     }
     $authors = rtrim($authors, ", ");
-    $array = array(array(
-        'record_id' => $record,
-        'output_title' => $pmid_data['result'][$pmid]['title'],
-        'output_year' => $pmid_data['result'][$pmid]['pubdate'],
-        'output_authors' => $authors,
-        'output_venue' => $pmid_data['result'][$pmid]['source'],
-        'output_citation' => $pmid_data['result'][$pmid]['source'] . ", " . $pmid_data['result'][$pmid]['epubdate'],
-        'output_pmid' => $pmid,
-        'output_pmcid' => $pmcid,
-        'output_url' => "https://pubmed.ncbi.nlm.nih.gov/" . $pmid,
-        $instrument.'_complete' => 2
-    ));
-    $jsonRM = json_encode($array);
-    $results = \Records::saveData($pid, 'json', $jsonRM, 'overwrite', 'YMD', 'flat', '', true, true, true, false, true, array(), true, false);
+
+    $year = $pmid_data['result'][$pmid]['pubdate'];
+    if ($year == trim($year) && strpos($year, ' ') !== false) {
+        #Date has spaces but not in beginning or end
+        $year = explode(" ",$pmid_data['result'][$pmid]['pubdate'])[0];
+    }
+
+    if (is_numeric($year)) {
+        $array['output_year'] = $year;
+    }
+
+    #DATA
+    $array['output_type'] = 1;
+    $array['output_title'] = $pmid_data['result'][$pmid]['title'];
+    $array['output_authors'] = $authors;
+    $array['output_venue'] = $pmid_data['result'][$pmid]['source'];
+    $array['output_citation'] = $pmid_data['result'][$pmid]['source'] . ", " . $pmid_data['result'][$pmid]['epubdate'];
+    $array['output_pmid'] = $pmid;
+    $array['output_pmcid'] = $pmcid;
+    $array['output_url'] = "https://pubmed.ncbi.nlm.nih.gov/" . $pmid;
+    $array[$instrument.'_complete'] = 2;
+
+    $isRepeating = false;
+    $q = $module->query("SELECT form_name FROM redcap_events_repeat where event_id=?",[$event_id]);
+    while ($row = $q->fetch_assoc()) {
+        $form_name = $row['form_name'];
+        if($instrument == $form_name){
+            $isRepeating = true;
+            break;
+        }
+    }
+    $array_data = array();
+    if($isRepeating) {
+        $array_data[$record]['repeat_instances'][$event_id][$instrument][$instance] = $array;
+    }else{
+        $array_data[$record][$event_id] = $array;
+    }
+
+    $results = \Records::saveData($pid, 'array', $array_data,'overwrite', 'YMD', 'flat', '', true, true, true, false, true, array(), true, false);
 
     if(empty($results['errors'])){
         echo json_encode(array("message"=>"success"));
