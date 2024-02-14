@@ -51,7 +51,10 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
                                 document.querySelector("[name=\'output_pmid_btn\']").innerHTML = \'<i class="fa-solid fa-download"></i>  Get PMID Details\';
                       
                                 if(jsonAjax.message == "success"){
-                                    window.location.reload();
+                                  //Load data in form
+                                   Object.keys(jsonAjax.data).forEach(function (label) {
+                                           $("[name="+label+"]").val(jsonAjax.data[label]);
+                                   });
                                 }else{
                                     let message = document.querySelectorAll("[name=\'output_pmid_message\']");
                                     message.forEach(element => {

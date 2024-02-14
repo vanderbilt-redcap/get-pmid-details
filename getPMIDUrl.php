@@ -63,29 +63,24 @@ if(empty($pmid_data["error"])) {
     $array['output_url'] = "https://pubmed.ncbi.nlm.nih.gov/" . $pmid;
     $array[$instrument.'_complete'] = 2;
 
-    $isRepeating = false;
-    $q = $module->query("SELECT form_name FROM redcap_events_repeat where event_id=?",[$event_id]);
-    while ($row = $q->fetch_assoc()) {
-        $form_name = $row['form_name'];
-        if($instrument == $form_name){
-            $isRepeating = true;
-            break;
-        }
-    }
-    $array_data = array();
-    if($isRepeating) {
-        $array_data[$record]['repeat_instances'][$event_id][$instrument][$instance] = $array;
-    }else{
-        $array_data[$record][$event_id] = $array;
-    }
+//    $isRepeating = false;
+//    $q = $module->query("SELECT form_name FROM redcap_events_repeat where event_id=?",[$event_id]);
+//    while ($row = $q->fetch_assoc()) {
+//        $form_name = $row['form_name'];
+//        if($instrument == $form_name){
+//            $isRepeating = true;
+//            break;
+//        }
+//    }
+//    $array_data = array();
+//    if($isRepeating) {
+//        $array_data[$record]['repeat_instances'][$event_id][$instrument][$instance] = $array;
+//    }else{
+//        $array_data[$record][$event_id] = $array;
+//    }
 
-    $results = \Records::saveData($pid, 'array', $array_data,'overwrite', 'YMD', 'flat', '', true, true, true, false, true, array(), true, false);
-
-    if(empty($results['errors'])){
-        echo json_encode(array("message"=>"success"));
-    }else {
-        echo json_encode(array("message" => "Something went wrong when saving the data"));
-    }
+//    $results = \Records::saveData($pid, 'array', $array_data,'overwrite', 'YMD', 'flat', '', true, true, true, false, true, array(), true, false);
+    echo json_encode(array("message"=>"success","data"=>$array));
 }else{
     echo json_encode(array("message" => "There are 0 results for PIMD #".$pmid));
 }
