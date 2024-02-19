@@ -11,7 +11,7 @@
     }
   ],
 
-  "no-auth-pages":[],
+  "no-auth-pages":["getPMIDurl"],
 
   "description": "Pulls journal article details (e.g., title, publication date, author list, citation, PMCID) based on a user-entered PubMed reference number (PMID).",
 

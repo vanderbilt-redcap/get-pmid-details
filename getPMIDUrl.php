@@ -52,40 +52,43 @@ if(empty($pmid_data["error"])) {
         $array['output_year'] = $year;
     }
 
+    $title = $pmid_data['result'][$pmid]['title'];
+    if(substr($title, -1) == "."){
+        $title = rtrim($title, ".");
+    }
+
+    ## CITATION -> {source}. {epub date or pub date}; {volume}({issue}):{pages}
+    $citation = $pmid_data['result'][$pmid]['source'];
+    if(!empty($citation)){
+        $citation .= ". ";
+    }
+    if(empty($pmid_data['result'][$pmid]['epubdate'])){
+        $citation .= $pmid_data['result'][$pmid]['pubdate'];
+    }else{
+        $citation .= $pmid_data['result'][$pmid]['epubdate'];
+    }
+    if(!empty($pmid_data['result'][$pmid]['volume'])){
+        $citation .= "; ".$pmid_data['result'][$pmid]['volume'];
+    }
+    if(!empty($pmid_data['result'][$pmid]['issue'])){
+        $citation .= "(".$pmid_data['result'][$pmid]['issue'].")";
+    }
+    if(!empty($pmid_data['result'][$pmid]['pages'])){
+        $citation .= ":".$pmid_data['result'][$pmid]['pages'];
+    }
+
     #DATA
     $array['output_type'] = 1;
-    $array['output_title'] = $pmid_data['result'][$pmid]['title'];
+    $array['output_title'] = $title;
     $array['output_authors'] = $authors;
     $array['output_venue'] = $pmid_data['result'][$pmid]['source'];
-    $array['output_citation'] = $pmid_data['result'][$pmid]['source'] . ", " . $pmid_data['result'][$pmid]['epubdate'];
+    $array['output_citation'] = $citation;
     $array['output_pmid'] = $pmid;
     $array['output_pmcid'] = $pmcid;
     $array['output_url'] = "https://pubmed.ncbi.nlm.nih.gov/" . $pmid;
     $array[$instrument.'_complete'] = 2;
 
-    $isRepeating = false;
-    $q = $module->query("SELECT form_name FROM redcap_events_repeat where event_id=?",[$event_id]);
-    while ($row = $q->fetch_assoc()) {
-        $form_name = $row['form_name'];
-        if($instrument == $form_name){
-            $isRepeating = true;
-            break;
-        }
-    }
-    $array_data = array();
-    if($isRepeating) {
-        $array_data[$record]['repeat_instances'][$event_id][$instrument][$instance] = $array;
-    }else{
-        $array_data[$record][$event_id] = $array;
-    }
-
-    $results = \Records::saveData($pid, 'array', $array_data,'overwrite', 'YMD', 'flat', '', true, true, true, false, true, array(), true, false);
-
-    if(empty($results['errors'])){
-        echo json_encode(array("message"=>"success"));
-    }else {
-        echo json_encode(array("message" => "Something went wrong when saving the data"));
-    }
+    echo json_encode(array("message"=>"success","data"=>$array));
 }else{
     echo json_encode(array("message" => "There are 0 results for PIMD #".$pmid));
 }
