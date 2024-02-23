@@ -7,7 +7,6 @@ use ExternalModules\ExternalModules;
 
 class GetPMIDDetailsExternalModule extends AbstractExternalModule
 {
-
     function redcap_every_page_before_render($project_id){
         $instrument = $this->getProjectSetting('instrument-name');
         if($_REQUEST['page'] == $instrument && !empty($instrument)) {
@@ -16,16 +15,13 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
             self:$this->getPMIDLink($project_id,$record,$repeat_instance);
         }
     }
-
     function redcap_survey_page($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance){
-        $instrument = $this->getProjectSetting('instrument-name');
-        if($_REQUEST['page'] == $instrument && !empty($instrument)) {
+        $instrument_name = $this->getProjectSetting('instrument-name');
+        if(($_REQUEST['page'] == $instrument || array_key_exists('s',$_REQUEST)) && !empty($instrument_name) && $instrument == $instrument_name) {
             self:$this->getPMIDLink($project_id, $record,$repeat_instance);
         }
     }
-
     public function getPMIDLink($project_id,$record,$repeat_instance){
-        echo '<script type="text/javascript" src="'.$this->getUrl('js/jquery-3.3.1.min.js').'"></script>';
         echo '<script>
                  function getLink(){
                     var value = document.getElementsByName("output_pmid")[0].value;
