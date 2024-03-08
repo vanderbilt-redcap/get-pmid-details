@@ -57,15 +57,15 @@ if(empty($pmid_data["error"])) {
         $title = rtrim($title, ".");
     }
 
-    ## CITATION -> {source}. {epub date or pub date}; {volume}({issue}):{pages}
+    ## CITATION -> {source}. {epub date or pub date}; {volume}({issue}):{pages}. {elocationid}. {epub date}
     $citation = $pmid_data['result'][$pmid]['source'];
     if(!empty($citation)){
         $citation .= ". ";
     }
-    if(empty($pmid_data['result'][$pmid]['epubdate'])){
-        $citation .= $pmid_data['result'][$pmid]['pubdate'];
-    }else{
+    if(empty($pmid_data['result'][$pmid]['pubdate'])){
         $citation .= $pmid_data['result'][$pmid]['epubdate'];
+    }else{
+        $citation .= $pmid_data['result'][$pmid]['pubdate'];
     }
     if(!empty($pmid_data['result'][$pmid]['volume'])){
         $citation .= "; ".$pmid_data['result'][$pmid]['volume'];
@@ -75,6 +75,12 @@ if(empty($pmid_data["error"])) {
     }
     if(!empty($pmid_data['result'][$pmid]['pages'])){
         $citation .= ":".$pmid_data['result'][$pmid]['pages'];
+    }
+    if(!empty($pmid_data['result'][$pmid]['elocationid'])){
+        $citation .= ". ".$pmid_data['result'][$pmid]['elocationid'];
+    }
+    if(!empty($pmid_data['result'][$pmid]['epubdate'])){
+        $citation .= ". Epub ".$pmid_data['result'][$pmid]['epubdate'];
     }
 
     #DATA
