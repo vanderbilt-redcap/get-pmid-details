@@ -22,7 +22,19 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
         }
     }
     public function getPMIDLink($project_id,$record,$repeat_instance){
-        echo '<script>
+        ## Adding the script messes the CSS. Adding styles again
+        echo '<style>
+                [data-mlm-type=label] {
+                    font-family: "Open Sans", Helvetica, Arial, Helvetica, sans-serif !important;
+                    font-size: 13px !important;
+                    padding: 2px;
+                    font-weight: bold !important;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+                #formSaveTip .btn-savedropdown{height: 25.8px}
+              </style>
+              <script>
                  function getLink(){
                     var value = document.getElementsByName("output_pmid")[0].value;
                     var url = '.json_encode($this->getUrl('getPMIDUrl.php')).';
