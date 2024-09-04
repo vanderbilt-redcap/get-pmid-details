@@ -37,7 +37,7 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
               <script>
                  function getLink(){
                     var value = document.getElementsByName("output_pmid")[0].value;
-                    var url = '.json_encode($this->getUrl('getPMIDUrl.php')).';
+                    var url = '.json_encode($this->getUrl('getPMIDUrl.php')."&NOAUTH").';
                     var pid = '.json_encode($project_id).';
                     var record = '.json_encode($record).';
                     var instance = '.json_encode($repeat_instance).';
