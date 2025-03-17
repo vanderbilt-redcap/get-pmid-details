@@ -83,7 +83,7 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
                 document.addEventListener("DOMContentLoaded",  function () { 
                     const el = document.querySelector("[name=\'output_pmid\']");
                     var btn = \'<div style="margin-top: 10px;float: right;">\' +
-                                 \'<button type="button" name="output_pmid_btn" class="btn btn-xs fs14 btn-rcgreen button.fs14.btn-rcgreen" onclick="getLink()">\'+
+                                 \'<button type="button" name="output_pmid_btn" class="btn btn-xs fs14 btn-rcgreen" style="color:#fff !important;" onclick="getLink()">\'+
                                     \'<i class="fa-solid fa-download"></i>\'+
                                     \' Get PMID Details\'+
                                  \'</button>\' +
