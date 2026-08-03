@@ -23,8 +23,7 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
     }
     public function getPMIDLink($project_id,$record,$repeat_instance){
         ## Adding the script messes the CSS. Adding styles again
-        echo '
-                <!DOCTYPE html>
+        echo '<!DOCTYPE html>
                 <html lang="en">
                     <head>
                         <style>
@@ -96,9 +95,9 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
                                     el.insertAdjacentHTML(\'afterend\', btn)
                             });
                         </script>
-                        </head>
-                        <body></body>
-                        </html>';
+                    </head>
+                    <body></body>
+                </html>';
     }
 }
 
