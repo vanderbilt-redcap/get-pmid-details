@@ -23,75 +23,81 @@ class GetPMIDDetailsExternalModule extends AbstractExternalModule
     }
     public function getPMIDLink($project_id,$record,$repeat_instance){
         ## Adding the script messes the CSS. Adding styles again
-        echo '<style>
-                [data-mlm-type=label] {
-                    font-family: "Open Sans", Helvetica, Arial, Helvetica, sans-serif !important;
-                    font-size: 13px !important;
-                    padding: 2px;
-                    font-weight: bold !important;
-                    padding-left: 5px;
-                    padding-right: 5px;
-                }
-                #formSaveTip .btn-savedropdown{height: 25.8px}
-              </style>
-              <script>
-                 function getLink(){
-                    var value = document.getElementsByName("output_pmid")[0].value;
-                    var url = '.json_encode($this->getUrl('getPMIDUrl.php')."&NOAUTH").';
-                    var pid = '.json_encode($project_id).';
-                    var record = '.json_encode($record).';
-                    var instance = '.json_encode($repeat_instance).';
-                    var redcap_csrf_token = '.json_encode($this->getCSRFToken()).';
-                    if(value == ""){
-                        alert("You need a PMID value to retrieve the data.")
-                    }else{
-                        document.querySelector("[name=\'output_pmid_btn\']").innerHTML = \'<i class="fa fa-spinner fa-spin"></i> Loading...\';
-                        $.ajax({
-                            type: "GET",
-                            url: url,
-                            data: "&pid="+pid+"&record="+record+"&instance="+instance+"&value="+value+"&redcap_csrf_token="+redcap_csrf_token,
-                            error: function (xhr, status, error) {
-                                alert(xhr.responseText);
-                            },
-                            success: function (result) {
-                                jsonAjax = jQuery.parseJSON(result);
-                                
-                                document.querySelector("[name=\'output_pmid_btn\']").innerHTML = \'<i class="fa-solid fa-download"></i>  Get PMID Details\';
-                      
-                                if(jsonAjax.message == "success"){
-                                  //Load data in form
-                                   Object.keys(jsonAjax.data).forEach(function (label) {
-                                           $("[name="+label+"]").val(jsonAjax.data[label]);
-                                   });
+        echo '<!DOCTYPE html>
+                <html lang="en">
+                    <head>
+                        <style>
+                            [data-mlm-type=label] {
+                                font-family: "Open Sans", Helvetica, Arial, Helvetica, sans-serif !important;
+                                font-size: 13px !important;
+                                padding: 2px;
+                                font-weight: bold !important;
+                                padding-left: 5px;
+                                padding-right: 5px;
+                            }
+                            #formSaveTip .btn-savedropdown{height: 25.8px}
+                        </style>
+                        <script>
+                             function getLink(){
+                                var value = document.getElementsByName("output_pmid")[0].value;
+                                var url = '.json_encode($this->getUrl('getPMIDUrl.php')."&NOAUTH").';
+                                var pid = '.json_encode($project_id).';
+                                var record = '.json_encode($record).';
+                                var instance = '.json_encode($repeat_instance).';
+                                var redcap_csrf_token = '.json_encode($this->getCSRFToken()).';
+                                if(value == ""){
+                                    alert("You need a PMID value to retrieve the data.")
                                 }else{
-                                    let message = document.querySelectorAll("[name=\'output_pmid_message\']");
-                                    message.forEach(element => {
-                                        element.remove();
+                                    document.querySelector("[name=\'output_pmid_btn\']").innerHTML = \'<i class="fa fa-spinner fa-spin"></i> Loading...\';
+                                    $.ajax({
+                                        type: "GET",
+                                        url: url,
+                                        data: "&pid="+pid+"&record="+record+"&instance="+instance+"&value="+value+"&redcap_csrf_token="+redcap_csrf_token,
+                                        error: function (xhr, status, error) {
+                                            alert(xhr.responseText);
+                                        },
+                                        success: function (result) {
+                                            jsonAjax = jQuery.parseJSON(result);
+                                            
+                                            document.querySelector("[name=\'output_pmid_btn\']").innerHTML = \'<i class="fa-solid fa-download"></i>  Get PMID Details\';
+                                  
+                                            if(jsonAjax.message == "success"){
+                                              //Load data in form
+                                               Object.keys(jsonAjax.data).forEach(function (label) {
+                                                       $("[name="+label+"]").val(jsonAjax.data[label]);
+                                               });
+                                            }else{
+                                                let message = document.querySelectorAll("[name=\'output_pmid_message\']");
+                                                message.forEach(element => {
+                                                    element.remove();
+                                                });
+                                                
+                                                const el = document.querySelector("[name=\'output_pmid_btn\']");
+                                                var btn = \'<div class="alert alert-danger" name="output_pmid_message" style="margin-top:10px">\' +
+                                                         jsonAjax.message+
+                                                        \'</div>\';
+                                                if(el != null)
+                                                    el.insertAdjacentHTML(\'afterend\', btn)
+                                            }
+                                        }
                                     });
-                                    
-                                    const el = document.querySelector("[name=\'output_pmid_btn\']");
-                                    var btn = \'<div class="alert alert-danger" name="output_pmid_message" style="margin-top:10px">\' +
-                                             jsonAjax.message+
-                                            \'</div>\';
-                                    if(el != null)
-                                        el.insertAdjacentHTML(\'afterend\', btn)
                                 }
                             }
-                        });
-                    }
-                }
-                document.addEventListener("DOMContentLoaded",  function () { 
-                    const el = document.querySelector("[name=\'output_pmid\']");
-                    var btn = \'<div style="margin-top: 10px;float: right;">\' +
-                                 \'<button type="button" name="output_pmid_btn" class="btn btn-xs fs14 btn-rcgreen" style="color:#fff !important;" onclick="getLink()">\'+
-                                    \'<i class="fa-solid fa-download"></i>\'+
-                                    \' Get PMID Details\'+
-                                 \'</button>\' +
-                            \'</div>\';
-                    if(el != null)
-                        el.insertAdjacentHTML(\'afterend\', btn)
-                });
-        </script>';
+                            document.addEventListener("DOMContentLoaded",  function () { 
+                                const el = document.querySelector("[name=\'output_pmid\']");
+                                var btn = \'<div style="margin-top: 10px;float: right;">\' +
+                                             \'<button type="button" name="output_pmid_btn" class="btn btn-xs fs14 btn-rcgreen" style="color:#fff !important;" onclick="getLink()">\'+
+                                                \'<i class="fa-solid fa-download"></i>\'+
+                                                \' Get PMID Details\'+
+                                             \'</button>\' +
+                                        \'</div>\';
+                                if(el != null)
+                                    el.insertAdjacentHTML(\'afterend\', btn)
+                            });
+                        </script>
+                    </head>
+                    <body></body>
+                </html>';
     }
 }
 
