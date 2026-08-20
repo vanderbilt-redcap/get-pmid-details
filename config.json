@@ -2,7 +2,7 @@
   "name": "Get PMID Details",
 
   "namespace": "Vanderbilt\\GetPMIDDetailsExternalModule",
-  "framework-version": 12,
+  "framework-version": 16,
   "authors": [
     {
       "name": "Eva Bascompte Moragas",
